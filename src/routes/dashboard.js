@@ -1,17 +1,17 @@
 import React from 'react'
 import {connect} from 'react-redux'
-
+import {Page} from '../components/index';
 class Dashboard extends React.Component {
     render() {
         return (
-            <div>
-                測試<br/>
-                測試<br/>   測試<br/>
-                測試<br/>
-                測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>
-
-
-            </div>
+            <Page inner>
+                <div>
+                    測試<br/>
+                    測試<br/>   測試<br/>
+                    測試<br/>
+                    測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>   測試<br/>
+                </div>
+            </Page>
         );
     }
 }

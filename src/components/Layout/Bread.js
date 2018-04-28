@@ -4,7 +4,7 @@ import {Breadcrumb, Icon} from 'antd'
 import {Link} from 'react-router-dom'
 import pathToRegexp from 'path-to-regexp'
 import {queryArray} from '../../utils/utils'
-import styles from './Layout.less'
+import  './Layout.less'
 
 
 export default class Bread extends React.Component {
@@ -75,7 +75,7 @@ export default class Bread extends React.Component {
             )
         })
         return (
-            <div className={styles.bread}>
+            <div className="bread">
                 <Breadcrumb>
                     {breads}
                 </Breadcrumb>

@@ -8,7 +8,8 @@ const webpackConfig = {
     entry: ["babel-polyfill", "./src/index.js"],
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: "/dist/",
     },
     module: {
         rules: [
@@ -34,16 +35,31 @@ const webpackConfig = {
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
-            title: '测试输出',
-            template: './src/public/index.html'
+            template: `${__dirname}/src/public/entry.ejs`,
+            filename:  'index.html',
+            minify: null,
+            hash: true,
         }),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin()
     ],
     devtool: 'source-map',
     devServer: {
-        contentBase: './dist',
+        contentBase: path.join(__dirname, "dist"),
+        publicPath: "/dist/",
+        compress: true,
         hot: true,
+        disableHostCheck: true,
+        watchOptions: {
+            ignored: /node_modules/,
+        },
+        historyApiFallback:{
+            index:"/dist/index.html",
+            disableDotRule: true,
+            logger: console.log.bind(console),
+            htmlAcceptHeaders:['text/html', '*/*']
+        },
+        inline :true,
         //添加测试数据
         before(app) {
             apiMocker(app, path.resolve('./mock'));

@@ -9,18 +9,16 @@ export default class Sider extends React.Component {
     static propTypes = {
         menus: PropTypes.array,
         collapsed: PropTypes.bool,
-        darkTheme: PropTypes.bool,
         location: PropTypes.object,
         navOpenKeys: PropTypes.array,
         changeOpenKeys: PropTypes.func,
     }
 
     render() {
-        const {menus, collapsed, darkTheme, location, navOpenKeys, changeOpenKeys} = this.props;
+        const {menus, collapsed, location, navOpenKeys, changeOpenKeys} = this.props;
         const menusProps = {
             menus,
             collapsed,
-            darkTheme,
             location,
             navOpenKeys,
             changeOpenKeys,
@@ -28,11 +26,11 @@ export default class Sider extends React.Component {
         return (
             <div>
                 <div className="logo">
-                    {collapsed ? '' : <span>{config.Title}</span>}
+                    {collapsed ?  '' : <span>{config.Title}</span>}
                 </div>
                 <Menus {...menusProps} />
-                {!collapsed ? <div className="switchTheme">
-                    <span><Icon type="bulb"/>Switch Theme</span></div> : ''}
+                <div className="switchTheme">
+                    <span><Icon type="bulb"/>Switch Theme</span></div>
             </div>
         );
     }

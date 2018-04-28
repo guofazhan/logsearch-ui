@@ -1,95 +1,128 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Menu, Icon} from 'antd'
-import {Link} from 'react-router-dom'
-import {arrayToTree, queryArray} from '../../utils/utils'
+import { Menu, Icon } from 'antd'
+import { Link } from 'react-router-dom'
+import { arrayToTree, queryArray } from '../../utils/utils'
 import pathToRegexp from 'path-to-regexp'
 
-
-export default class Menus extends React.Component {
+export default  class Menus extends React.Component{
     static propTypes = {
         menus: PropTypes.array,
         collapsed: PropTypes.bool,
-        darkTheme: PropTypes.bool,
         navOpenKeys: PropTypes.array,
         changeOpenKeys: PropTypes.func,
         location: PropTypes.object,
     }
 
-    render() {
-        const {menus, collapsed, darkTheme, navOpenKeys, changeOpenKeys, location} = this.props
-        // 生成树状
-        const menuTree = arrayToTree(menus.filter(_ => _.mpid !== '-1'), 'id', 'mpid');
-        const levelMap = {};
-        // 递归生成菜单
-        const getMenus = (menuTreeN, siderFoldN) => {
-            return menuTreeN.map((item) => {
-                if (item.children) {
-                    if (item.mpid) {
-                        levelMap[item.id] = item.mpid
-                    }
-                    return (
-                        <Menu.SubMenu
-                            key={item.id}
-                            title={<span>
-              {item.icon && <Icon type={item.icon}/>}
-                                {(!siderFoldN || !menuTree.includes(item)) && item.name}
-            </span>}
-                        >
-                            {getMenus(item.children, siderFoldN)}
-                        </Menu.SubMenu>
-                    )
+    constructor(props) {
+        super(props);
+        this.menus = props.menus;
+        this.collapsed = props.collapsed;
+        this.levelMap ={};
+        this.menuItems = this._getMenus(arrayToTree(this.menus.filter(_ => _.mpid !== '-1'), 'id', 'mpid'),this.collapsed);
+    }
+
+    /**
+     * 递归生成菜单
+     * @param menuTree
+     * @param collapsed
+     * @private
+     */
+     _getMenus = (menuTree, collapsed) => {
+        return menuTree.map((item) => {
+            if (item.children) {
+                if (item.mpid) {
+                    this.levelMap[item.id] = item.mpid
                 }
                 return (
-                    <Menu.Item key={item.id}>
-                        <Link to={item.route || '#'}
-                              style={siderFoldN ? {width: 10} : {}}>
-                            {item.icon && <Icon type={item.icon}/>}
-                            {item.name}
-                        </Link>
-                    </Menu.Item>
+                    <Menu.SubMenu
+                        key={item.id}
+                        title={<span>
+              {item.icon && <Icon type={item.icon} />}
+                            {(!collapsed || !menuTree.includes(item)) && item.name}
+            </span>}
+                    >
+                        {this._getMenus(item.children, collapsed)}
+                    </Menu.SubMenu>
                 )
-            })
-        }
-        const menuItems = getMenus(menuTree, collapsed);
+            }
+            return (
+                <Menu.Item key={item.id}>
+                    <Link to={item.route || '#'} style={collapsed ? { width: 10 } : {}}>
+                        {item.icon && <Icon type={item.icon} />}
+                        {item.name}
+                    </Link>
+                </Menu.Item>
+            )
+        })
+    }
 
-        // 保持选中
-        const getAncestorKeys = (key) => {
-            let map = {}
-            const getParent = (index) => {
-                const result = [String(levelMap[index])]
-                if (levelMap[result[0]]) {
-                    result.unshift(getParent(result[0])[0])
-                }
-                return result
+    /**
+     * 保持选中
+     * @param key
+     * @returns {*|Array}
+     */
+    getAncestorKeys = (key) => {
+        let map = {}
+        const getParent = (index) => {
+            const result = [String(this.levelMap[index])]
+            if (this.levelMap[result[0]]) {
+                result.unshift(getParent(result[0])[0])
             }
-            for (let index in levelMap) {
-                if ({}.hasOwnProperty.call(levelMap, index)) {
-                    map[index] = getParent(index)
-                }
-            }
-            return map[key] || []
+            return result
         }
-
-        const onOpenChange = (openKeys) => {
-            const latestOpenKey = openKeys.find(key => !navOpenKeys.includes(key))
-            const latestCloseKey = navOpenKeys.find(key => !openKeys.includes(key))
-            let nextOpenKeys = []
-            if (latestOpenKey) {
-                nextOpenKeys = getAncestorKeys(latestOpenKey).concat(latestOpenKey)
+        for (let index in this.levelMap) {
+            if ({}.hasOwnProperty.call(this.levelMap, index)) {
+                map[index] = getParent(index)
             }
-            if (latestCloseKey) {
-                nextOpenKeys = getAncestorKeys(latestCloseKey)
-            }
-            changeOpenKeys(nextOpenKeys)
         }
+        return map[key] || []
+    }
 
+    /**
+     *
+     * @param array
+     * @param current
+     * @param pid
+     * @param id
+     * @returns {*[]}
+     */
+    getPathArray = (array, current, pid, id) => {
+        let result = [String(current[id])]
+        const getPath = (item) => {
+            if (item && item[pid]) {
+                result.unshift(String(item[pid]))
+                getPath(queryArray(array, item[pid], id))
+            }
+        }
+        getPath(current)
+        return result;
+    }
+
+    /**
+     * SubMenu 展开/关闭的回调
+     * @param openKeys
+     */
+     handleOnOpenChange = (openKeys) => {
+        let {navOpenKeys,changeOpenKeys} = this.props;
+        const latestOpenKey = openKeys.find(key => !navOpenKeys.includes(key))
+        const latestCloseKey = navOpenKeys.find(key => !openKeys.includes(key))
+        let nextOpenKeys = []
+        if (latestOpenKey) {
+            nextOpenKeys = this.getAncestorKeys(latestOpenKey).concat(latestOpenKey)
+        }
+        if (latestCloseKey) {
+            nextOpenKeys = this.getAncestorKeys(latestCloseKey)
+        }
+        changeOpenKeys(nextOpenKeys)
+    }
+
+    render() {
+        let {navOpenKeys,collapsed,menus} = this.props;
         let menuProps = !collapsed ? {
-            onOpenChange,
+            onOpenChange:this.handleOnOpenChange,
             openKeys: navOpenKeys,
-        } : {}
-
-
+        } : {};
         // 寻找选中路由
         let currentMenu
         let defaultSelectedKeys
@@ -99,32 +132,23 @@ export default class Menus extends React.Component {
                 break
             }
         }
-        const getPathArray = (array, current, pid, id) => {
-            let result = [String(current[id])]
-            const getPath = (item) => {
-                if (item && item[pid]) {
-                    result.unshift(String(item[pid]))
-                    getPath(queryArray(array, item[pid], id))
-                }
-            }
-            getPath(current)
-            return result
-        }
         if (currentMenu) {
-            defaultSelectedKeys = getPathArray(menus, currentMenu, 'mpid', 'id')
+            defaultSelectedKeys = this.getPathArray(menus, currentMenu, 'mpid', 'id')
         }
+
         if (!defaultSelectedKeys) {
             defaultSelectedKeys = ['1']
         }
-        return (
+
+        return(
             <Menu
                 {...menuProps}
-                mode={collapsed ? 'vertical' : 'inline'}
+                mode={this.collapsed ? 'vertical' : 'inline'}
                 theme='dark'
                 selectedKeys={defaultSelectedKeys}
             >
-                {menuItems}
+                {this.menuItems}
             </Menu>
-        );
+        )
     }
 }

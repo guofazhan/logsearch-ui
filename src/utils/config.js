@@ -1,5 +1,5 @@
 module.exports = {
-    Title: 'Log-Search',
+    Title: '日志检索平台',
     prefix: 'logsearch',
     logo: '/logo.svg',
     footerText: '中国移动日志检索平台  © 2017 ',

@@ -1,21 +1,27 @@
 import React from 'react';
-import { LocaleProvider} from 'antd';
-import { routerRedux, Route, Switch,Redirect } from 'dva/router';
+import {LocaleProvider} from 'antd';
+import {routerRedux, Route, Switch, Redirect} from 'dva/router';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import App from './routes/app'
 import dynamic from "dva/dynamic";
-const { ConnectedRouter } = routerRedux;
 
-function RouterConfig({ history, app }) {
+const {ConnectedRouter} = routerRedux;
+
+function RouterConfig({history, app}) {
     const error = dynamic({
         app,
-        component: () => import('./routes/dashboard'),
+        component: () => import('./routes/error/'),
     })
     const routes = [
         {
             path: '/dashboard',
             models: () => [import('./models/dashboard')],
             component: () => import('./routes/dashboard'),
+        },
+        {
+            path: '/logsearch',
+            models: () => [import('./models/logsearch/logsearch')],
+            component: () => import('./routes/logsearch/index'),
         }
     ]
     return (
@@ -23,9 +29,10 @@ function RouterConfig({ history, app }) {
             <ConnectedRouter history={history}>
                 <App>
                     <Switch>
-                        <Route exact path="/" render={() => (<Redirect to="/dashboard" />)} />
+                        <Route exact path="/"
+                               render={() => (<Redirect to="/dashboard"/>)}/>
                         {
-                            routes.map(({ path, ...dynamics }, key) => (
+                            routes.map(({path, ...dynamics}, key) => (
                                 <Route key={key}
                                        exact
                                        path={path}
@@ -36,7 +43,7 @@ function RouterConfig({ history, app }) {
                                 />
                             ))
                         }
-                        <Route component={error} />
+                        <Route component={error}/>
                     </Switch>
 
                 </App>
@@ -44,4 +51,5 @@ function RouterConfig({ history, app }) {
         </LocaleProvider>
     );
 }
+
 export default RouterConfig;

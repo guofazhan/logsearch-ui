@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'dva/router';
 import {Helmet} from 'react-helmet';
 import {BackTop, Layout} from 'antd';
-import config from '../utils/config';
+import config, {prefix} from '../utils/config';
 import * as MyLayout from '../components/Layout/index';
 import Loader from '../components/Loader/Loader';
 import './app.less'
@@ -19,6 +19,11 @@ class App extends React.Component {
         app: PropTypes.object,
         loading: PropTypes.object,
     };
+
+    constructor(props) {
+        super(props);
+    }
+
     _getBreadProps(menus,location){
         return {
             menus,
@@ -33,10 +38,12 @@ class App extends React.Component {
             }
         }
     };
-    _getSiderProps(menus,location,dispatch){
+    _getSiderProps(menus,location,dispatch,collapsed,navOpenKeys){
         return {
             menus,
             location,
+            collapsed,
+            navOpenKeys,
             changeOpenKeys(openKeys){
                 window.localStorage.setItem(`${config.prefix}-navOpenKeys`, JSON.stringify(openKeys));
                 dispatch({
@@ -48,11 +55,11 @@ class App extends React.Component {
     }
     render() {
         const {location, app, loading, children,dispatch} = this.props;
-        const {menus, collapsed} = app;
+        const {menus, collapsed,navOpenKeys} = app;
         const {logo} = config;
         const breadProps = this._getBreadProps(menus,location);
-        const headerProps = this._getHeaderProps(menus,dispatch);
-        const siderProps = this._getSiderProps(menus,location,dispatch);
+        const headerProps = this._getHeaderProps(collapsed,dispatch);
+        const siderProps = this._getSiderProps(menus,location,dispatch,collapsed,navOpenKeys);
         return (
             <div>
                 <Loader fullScreen spinning={loading.effects['app/init']}/>
@@ -69,8 +76,7 @@ class App extends React.Component {
                             <Sider {...siderProps} />}
                     </Layout.Sider>
                     <Layout style={{height: '100vh', overflow: 'scroll'}} id="mainContainer">
-                        <BackTop
-                            target={() => document.getElementById('mainContainer')}/>
+                        <BackTop target={() => document.getElementById('mainContainer')}/>
                         <Header {...headerProps} />
                         <Content>
                             <Bread {...breadProps} />
